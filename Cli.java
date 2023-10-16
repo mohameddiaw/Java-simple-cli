@@ -1,68 +1,53 @@
-import java.util.Date;
-import java.util.Properties;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.Scanner;
 
 public class Cli {
 
     public static void main(String[] args) {
-
-        // Crée un scanner pour lire l'entrée de l'utilisateur
-        Scanner sc = new Scanner(System.in);
-
-        // Affiche le menu de commandes
-        System.out.println("Veuillez choisir une commande :");
-        System.out.println("* date : Affiche la date actuelle");
-        System.out.println("* time : Affiche l'heure actuelle");
-        System.out.println("* datetime : Affiche la date et l'heure actuelles");
-        System.out.println("* useraccount : Affiche le nom d'utilisateur");
-        System.out.println("* userhome : Affiche le répertoire home de l'utilisateur");
-        System.out.println("* os : Affiche le nom et la version du système d'exploitation");
-        System.out.println("* printenv : Affiche la valeur d'une variable d'environnement");
-        System.out.println("* echo : Affiche les arguments de la commande");
-
-        // Récupère la commande de l'utilisateur
-        String commande = sc.nextLine();
-
-        // Traite la commande
-        switch (commande) {
-            case "date":
-                // Affiche la date actuelle
-                Date date = new Date();
-                System.out.println(date);
-                break;
-            case "time":
-                // Affiche l'heure actuelle
-                System.out.println(System.currentTimeMillis());
-                break;
-            case "datetime":
-                // Affiche la date et l'heure actuelles
-                System.out.println(new Date());
-                break;
-            case "useraccount":
-                // Affiche le nom d'utilisateur
-                System.out.println(System.getProperty("user.name"));
-                break;
-            case "userhome":
-                // Affiche le répertoire home de l'utilisateur
-                System.out.println(System.getProperty("user.home"));
-                break;
-            case "os":
-                // Affiche le nom et la version du système d'exploitation
-                System.out.println(System.getProperty("os.name") + " " + System.getProperty("os.version"));
-                break;
-            case "printenv":
-                // Affiche la valeur d'une variable d'environnement
-                System.out.println(System.getenv(args[0]));
-                break;
-            case "echo":
-                // Affiche les arguments de la commande
-                for (String arg : args) {
-                    System.out.println(arg);
+        Scanner scanner = new Scanner(System.in); // Listen to the standard input (console)
+        System.out.print("> "); // Prompt
+        while (true) { // Infinite loop
+            String command = scanner.nextLine(); // Get input from console as a string
+            String output = ""; // A variable named output of type String
+            if (command.equals("exit")) {
+                break; // Forces exit of the while loop
+            } else {
+                switch (command) {
+                    case "date":
+                        output = LocalDate.now().toString();
+                        break;
+                    case "time":
+                        output = LocalTime.now().toString();
+                        break;
+                    case "datetime":
+                        output = LocalDateTime.now().toString();
+                        break;
+                    case "useraccount":
+                        output = System.getProperty("user.name");
+                        break;
+                    case "userhome":
+                        output = System.getProperty("user.home");
+                        break;
+                    case "os":
+                        output = System.getProperty("os.name") + " " + System.getProperty("os.version");
+                        break;
+                    case "printenv":
+                        output = System.getenv(args[0]);
+                        break;
+                    case "echo":
+                        for (String arg : args) {
+                            output += arg + " ";
+                        }
+                        break;
+                    default:
+                        output = "Command '" + command + "' not found.";
+                        break;
                 }
-                break;
-            default:
-                // Commande inconnue
-                System.out.println("Commande inconnue");
+            }
+            System.out.println(output); // Print with new line (ln)
+            System.out.print("> "); // Prompt
         }
     }
 }
