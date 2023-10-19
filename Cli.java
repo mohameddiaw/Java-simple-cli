@@ -14,7 +14,10 @@ public class Cli {
             if (command.equals("exit")) {
                 break; // Forces exit of the while loop
             } else {
-                switch (command) {
+                // Récupère les arguments de la commande
+                String[] arguments = command.split(" ");
+
+                switch (arguments[0]) {
                     case "date":
                         output = LocalDate.now().toString();
                         break;
@@ -34,15 +37,21 @@ public class Cli {
                         output = System.getProperty("os.name") + " " + System.getProperty("os.version");
                         break;
                     case "printenv":
-                        output = System.getenv(args[0]);
+                        if (arguments.length == 1) {
+                            output = "Veuillez spécifier une variable d'environnement.";
+                        } else if (arguments[1].isEmpty()) {
+                            output = "La variable d'environnement spécifiée est vide.";
+                        } else {
+                            output = System.getenv(arguments[1]);
+                        }
                         break;
                     case "echo":
-                        for (String arg : args) {
-                            output += arg + " ";
+                        for (int i = 1; i < arguments.length; i++) {
+                            output += arguments[i] + " ";
                         }
                         break;
                     default:
-                        output = "Command '" + command + "' not found.";
+                        output = "Commande '" + command + "' not found.";
                         break;
                 }
             }
