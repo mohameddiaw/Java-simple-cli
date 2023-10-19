@@ -38,26 +38,33 @@ public class Cli {
                         break;
                     case "printenv":
                         if (arguments.length == 1) {
-                            output = "Veuillez spécifier une variable d'environnement.";
-                        } else if (arguments[1].isEmpty()) {
-                            output = "La variable d'environnement spécifiée est vide.";
-                        } else {
+                            output = "";
+                        } else if (arguments.length == 2) {
                             output = System.getenv(arguments[1]);
+                        } else {
+                            output = "Commande 'printenv' invalide.";
                         }
                         break;
                     case "echo":
-                        for (int i = 1; i < arguments.length; i++) {
-                            output += arguments[i] + " ";
+                        if (arguments.length == 1) {
+                            output = "";
+                        } else {
+                            output = String.join(" ", arguments);
                         }
                         break;
                     default:
-                        output = "Commande '" + command + "' not found.";
+                        if (command.startsWith("printenvx")) {
+                            output = "commande printenvx not found.";
+                        } else {
+                            output = command + ", commande not found.";
+                        }
                         break;
                 }
             }
             System.out.println(output); // Print with new line (ln)
             System.out.print("> "); // Prompt
         }
+        scanner.close(); // Close scanner to prevent resource leak
     }
 }
 
