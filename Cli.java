@@ -1,20 +1,23 @@
+import java.io.File;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.Map;
 import java.util.Scanner;
 
 public class Cli {
 
     public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in); // Listen to the standard input (console)
-        System.out.print("> "); // Prompt
-        while (true) { // Infinite loop
-            String command = scanner.nextLine(); // Get input from console as a string
-            String output = ""; // A variable named output of type String
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("> ");
+
+        while (true) {
+            String command = scanner.nextLine();
+            String output = "";
+
             if (command.equals("exit")) {
-                break; // Forces exit of the while loop
+                break;
             } else {
-                // Récupère les arguments de la commande
                 String[] arguments = command.split(" ");
 
                 switch (arguments[0]) {
@@ -38,18 +41,42 @@ public class Cli {
                         break;
                     case "printenv":
                         if (arguments.length == 1) {
-                            output = "";
+                            Map<String, String> env = System.getenv();
+                            for (String key : env.keySet()) {
+                                System.out.println(key + "=" + env.get(key));
+                            }
                         } else if (arguments.length == 2) {
-                            output = System.getenv(arguments[1]);
+                            String variableName = arguments[1];
+                            String value = System.getenv(variableName);
+                            if (value != null) {
+                                System.out.println(variableName + "=" + value);
+                            } else {
+                                System.out.println("Variable d'environnement " + variableName + " introuvable.");
+                            }
                         } else {
                             output = "Commande 'printenv' invalide.";
                         }
                         break;
-                    case "echo":
+                    case "logout":
+                        output = "Fermeture du CLI.";
+                        System.exit(0);
+                        break;
+                    case "print":
                         if (arguments.length == 1) {
                             output = "";
                         } else {
                             output = String.join(" ", arguments);
+                        }
+                        break;
+                    case "ls":
+                        String path = arguments.length == 1 ? "." : arguments[1];
+                        File directory = new File(path);
+                        if (directory.isDirectory()) {
+                            for (String fileName : directory.list()) {
+                                System.out.println(fileName);
+                            }
+                        } else {
+                            output = "Not a directory.";
                         }
                         break;
                     default:
@@ -61,10 +88,12 @@ public class Cli {
                         break;
                 }
             }
-            System.out.println(output); // Print with new line (ln)
-            System.out.print("> "); // Prompt
+
+            System.out.println(output);
+            System.out.print("> ");
         }
-        scanner.close(); // Close scanner to prevent resource leak
+
+        scanner.close();
     }
 }
 
